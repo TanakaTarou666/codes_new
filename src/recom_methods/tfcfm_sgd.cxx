@@ -5,7 +5,7 @@ TFCFMWithSGD::TFCFMWithSGD(int missing_count)
     method_name_ = "TFCFM_SGD";
 }
 
-void TFCFMWithSGD::set_parameters(double latent_dimension_percentage, int cluster_size, double fuzzifier_em, double fuzzifier_Lambda) {
+void TFCFMWithSGD::set_parameters(double latent_dimension_percentage, int cluster_size, double fuzzifier_em, double fuzzifier_Lambda, double reg_parameter,double learning_rate) {
 #if defined ARTIFICIALITY
     latent_dimension_ = latent_dimension_percentage;
 #elif
@@ -19,7 +19,12 @@ void TFCFMWithSGD::set_parameters(double latent_dimension_percentage, int cluste
         return 1;
     }
 #endif
-    parameters_ = {(double)latent_dimension_, double(cluster_size), fuzzifier_em, fuzzifier_Lambda};
+    cluster_size_ = cluster_size;
+    fuzzifier_em_ = fuzzifier_em;
+    fuzzifier_Lambda_ = fuzzifier_Lambda;
+    reg_parameter_ = reg_parameter;
+    learning_rate_ = learning_rate;
+    parameters_ = {(double)latent_dimension_, double(cluster_size), fuzzifier_em, fuzzifier_Lambda, double learning_rate, double reg_parameter};
     dirs_ = mkdir_result({method_name_}, parameters_, num_missing_value_);
 }
 
@@ -65,8 +70,6 @@ void TFCFMWithSGD::set_initial_values(int &seed) {
     w0_ = Vector(cluster_size_, 0.0, "all");
     w_ = Matrix(cluster_size_, num_users + num_items, 0.0);
     v_ = Tensor(cluster_size_, num_users + num_items, latent_dimension_);
-    e_ = Matrix(cluster_size_, sparse_missing_data_.nnz() - num_missing_value_, 0.0);
-    q_ = Tensor(cluster_size_, sparse_missing_data_.nnz() - num_missing_value_, latent_dimension_);
     X_ = DSDTensor(sparse_missing_data_, num_users + num_items);
 
     std::mt19937_64 mt;
@@ -97,28 +100,26 @@ void TFCFMWithSGD::set_initial_values(int &seed) {
     // }
 }
 
-void TFCFMWithSGD::precompute() {
-//     for (int c = 0; c < cluster_size_; ++c) {
-//         int l = 0;
-//         for (int i = 0; i < sparse_missing_data_.rows(); i++) {
-//             for (int j = 0; j < sparse_missing_data_(i, "row"); j++) {
-//                 if (sparse_missing_data_(i, j) != 0) {
-//                     e_[c][l] =
-//                     l++;
-//                 }
-//             }
-//         }
-//         e[c][l] = fm_y_hat(X[l], w0[c], w[c], v[c]) - Y[l];
-//         for (int f = 0; f < K; ++f) {
-//             q[c][l][f] = 0.0;
-//             for (int j_ = 0; j_ < X[l].essencialSize(); ++j_) {
-//                 q[c][l][f] += X[l].elementIndex(j_) * v[c][X[l].indexIndex(j_)][f];
-//             }
-//         }
-//     }
-// }
-}
-
 void TFCFMWithSGD::calculate_Wo_w_v() {}
 
-void TFCFMWithSGD::calculate_dissimilarities() { return; }
+double TFCFMWithSGD::calculate_objective_value() {
+    double result = 0.0;
+    
+    for (int c = 0; c < cluster_size_; c++) {
+        double reg_w = 0,reg_v=0;
+        for (int i = 0; i < num_users; i++) {
+            result += pow(membership_(i,j),fuzzifier_em_)*dissimilarities_(c,i)
+                      + 1/(fuzzifier_Lambda_*(fuzzifier_em_-1))*(pow(membership_(i,j)),fuzzifier_em_)-membership_(i,j);
+        }
+        for (int n = 0; n < num_users + num_items; n++) {
+            reg_w += pow(w_(c,n), 2);
+            for (int k = 0; k < latent_dimension_; k++) {
+                reg_v += pow(v_[c](n, k), 2);
+            }
+        }
+        result += reg_parameter_*(pow(w0_[c], 2) + reg_w + reg_v);
+    }
+    return result;
+}
+
+

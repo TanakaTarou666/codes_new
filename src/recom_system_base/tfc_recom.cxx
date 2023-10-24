@@ -2,7 +2,18 @@
 
 TFCRecom::TFCRecom(int missing_pattern) : Recom(missing_pattern), membership_(), prev_membership_(), dissimilarities_() {}
 
-void TFCRecom::calculate_dissimilarities() { return; }
+void TFCRecom::calculate_dissimilarities() { 
+    
+    /*
+    for(int i = 0; i < num_users; i++){
+    for(int i = 0; i < sprse_missing_data_(i,"row"); i++)
+         pow( y[i]-predict_y[i] , 2);
+    
+    Dissimilarities[c][i] =
+    }
+    */
+    return; 
+}
 
 void TFCRecom::calculate_membership() {
     prev_membership_ = membership_;
