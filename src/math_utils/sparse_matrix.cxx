@@ -32,6 +32,8 @@ int& SparseMatrix::operator()(int row, int index, const char* s) {
     }
     return col_indices_[row_pointers_[row] + index];
 }
+
+//(i,j,"index") : スパースでi行目，j番目の要素の、スパースではない本来の列番号
 const int& SparseMatrix::operator()(int row, int index, const char* s) const {
     if (strcmp(s, "index") != 0) {
         std::cerr << "Invalid string parameter" << std::endl;
@@ -40,6 +42,7 @@ const int& SparseMatrix::operator()(int row, int index, const char* s) const {
     return col_indices_[row_pointers_[row] + index];
 }
 
+//(row,s) : row行目の要素数
 const int SparseMatrix::operator()(int row, const char* s) const {
     if (strcmp(s, "row") != 0) {
         std::cerr << "Invalid string parameter" << std::endl;
@@ -51,7 +54,7 @@ const int SparseMatrix::operator()(int row, const char* s) const {
 
 int SparseMatrix::rows() const { return rows_; }
 int SparseMatrix::cols() const { return cols_; }
-int SparseMatrix::nnz() const { return nnz_; }
+int SparseMatrix::nnz() const { return nnz_; }　//total要素数
 
 SparseMatrix& SparseMatrix::operator=(const SparseMatrix& arg) {
     if (this == &arg) {

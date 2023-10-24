@@ -1,5 +1,6 @@
 #include "dsd_tensor.h"
 
+//dsd(i,j)[depth] = double
 DSDTensor::DSDTensor(SparseMatrix &arg, int depth) : depth_(depth) {
     rows_ = arg.rows();
     cols_ = arg.cols();

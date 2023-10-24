@@ -2,7 +2,7 @@
 
 MF::MF(int missing_pattern) : Recom(missing_pattern), user_factors_(), item_factors_(), prev_user_factors_(), prev_item_factors_() {
     method_name_ = "MFtest32";
-}
+} //ファイル名
 
 void MF::set_parameters(double latent_dimension_percentage, double learning_rate, double reg_parameter) {
 #if defined ARTIFICIALITY
@@ -27,7 +27,7 @@ void MF::set_parameters(double latent_dimension_percentage, double learning_rate
     return;
 }
 
-void MF::train() {
+void MF::train() { //mf_pred
     int error_count = 0;
     double best_objective_value = DBL_MAX;
     for (int initial_value_index = 0; initial_value_index < num_initial_values; initial_value_index++) {

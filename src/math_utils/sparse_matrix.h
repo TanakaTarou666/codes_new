@@ -16,12 +16,15 @@ class SparseMatrix {
     ~SparseMatrix();
     double& operator()(int row, int index);              // 非constオブジェクト向け
     const double& operator()(int row, int index) const;  // constオブジェクト向け
+    
+    //(i,j,"index") : スパースでi行目，j番目の要素の、スパースではない本来の列番号
     int& operator()(int row, int index, const char* s);
     const int& operator()(int row, int index, const char* s) const;
-    const int operator()(int row, const char* s) const;
+
+    const int operator()(int row, const char* s) const; //.row(引数) : row行目の要素数
     int rows() const;
     int cols() const;
-    int nnz() const;
+    int nnz() const; //total要素数
     SparseMatrix& operator=(const SparseMatrix& arg);  // コピー代入演算子
     SparseMatrix& operator=(SparseMatrix&& arg);       // ムーブ代入演算子
     Matrix operator*(const Matrix& arg);

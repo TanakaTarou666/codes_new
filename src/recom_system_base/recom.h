@@ -23,6 +23,7 @@ class Recom {
     Vector tp_fn_, fp_tn_;
 
    protected:
+    //欠損数
     int num_missing_value_;
     std::vector<std::string> dirs_;
     std::vector<double> parameters_;
