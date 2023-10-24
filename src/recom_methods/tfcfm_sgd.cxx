@@ -1,11 +1,11 @@
-#include "tfcfm.h"
+#include "tfcfm_sgd.h"
 
-TFCFM::TFCFM(int missing_count)
+TFCFMWithSGD::TFCFMWithSGD(int missing_count)
     : TFCRecom(missing_count), Recom(missing_count), w0_(), prev_w0_(), w_(), prev_w_(), v_(), prev_v_(), e_(), q_(), X_() {
-    method_name_ = "TFCFM";
+    method_name_ = "TFCFM_SGD";
 }
 
-void TFCFM::set_parameters(double latent_dimension_percentage, int cluster_size, double fuzzifier_em, double fuzzifier_Lambda) {
+void TFCFMWithSGD::set_parameters(double latent_dimension_percentage, int cluster_size, double fuzzifier_em, double fuzzifier_Lambda) {
 #if defined ARTIFICIALITY
     latent_dimension_ = latent_dimension_percentage;
 #elif
@@ -23,7 +23,7 @@ void TFCFM::set_parameters(double latent_dimension_percentage, int cluster_size,
     dirs_ = mkdir_result({method_name_}, parameters_, num_missing_value_);
 }
 
-void TFCFM::train() {
+void TFCFMWithSGD::train() {
     int error_count = 0;
     double best_objective_value = DBL_MAX;
     for (int initial_value_index = 0; initial_value_index < num_initial_values; initial_value_index++) {
@@ -61,7 +61,7 @@ void TFCFM::train() {
     }
 }
 
-void TFCFM::set_initial_values(int &seed) {
+void TFCFMWithSGD::set_initial_values(int &seed) {
     w0_ = Vector(cluster_size_, 0.0, "all");
     w_ = Matrix(cluster_size_, num_users + num_items, 0.0);
     v_ = Tensor(cluster_size_, num_users + num_items, latent_dimension_);
@@ -97,7 +97,7 @@ void TFCFM::set_initial_values(int &seed) {
     // }
 }
 
-void TFCFM::precompute() {
+void TFCFMWithSGD::precompute() {
 //     for (int c = 0; c < cluster_size_; ++c) {
 //         int l = 0;
 //         for (int i = 0; i < sparse_missing_data_.rows(); i++) {
@@ -119,6 +119,6 @@ void TFCFM::precompute() {
 // }
 }
 
-void TFCFM::calculate_Wo_w_v() {}
+void TFCFMWithSGD::calculate_Wo_w_v() {}
 
-void TFCFM::calculate_dissimilarities() { return; }
+void TFCFMWithSGD::calculate_dissimilarities() { return; }

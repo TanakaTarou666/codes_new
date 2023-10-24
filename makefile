@@ -9,7 +9,9 @@ tfc_recom = src/recom_system_base/tfc_recom.cxx src/recom_system_base/recom.cxx 
 
 .out/mf: src/recom_methods/mf.cxx main_recom/mf_main.cxx $(normal_recom) 
 	$(CXX) $(CXXFLAGS) $^ -o $@
-.out/tfcfm: src/recom_methods/tfcfm.cxx main_recom/tfcfm_main.cxx $(tfc_recom) 
+.out/tfcfm_sgd: src/recom_methods/tfcfm_sgd.cxx main_recom/tfcfm_sgd_main.cxx $(tfc_recom) 
+	$(CXX) $(CXXFLAGS) $^ -o $@
+.out/tfcfm_als: src/recom_methods/tfcfm_als.cxx main_recom/tfcfm_als_main.cxx $(tfc_recom) 
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:

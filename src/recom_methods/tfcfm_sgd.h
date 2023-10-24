@@ -1,7 +1,7 @@
 #include "../math_utils/dsd_tensor.h"
 #include "../recom_system_base/tfc_recom.h"
 
-class TFCFM : virtual public TFCRecom , virtual public Recom{
+class TFCFMWithSGD : virtual public TFCRecom , virtual public Recom{
    protected:
     // 潜在次元
     int latent_dimension_;
@@ -11,7 +11,7 @@ class TFCFM : virtual public TFCRecom , virtual public Recom{
     DSDTensor X_;
 
    public:
-    TFCFM(int missing_count);
+    TFCFMWithSGD(int missing_count);
     void set_parameters(double latent_dimension_percentage, int cluster_size, double fuzzifier_em, double fuzzifier_Lambda);
     void train() override;
     void precompute();
