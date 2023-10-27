@@ -10,6 +10,6 @@ class TFCRecom : virtual public Recom {
 
    public:
     TFCRecom(int missing_count);
-    virtual void calculate_dissimilarities();
+    virtual void calculate_dissimilarities(Tensor predict_correct_data);
     virtual void calculate_membership();
 };

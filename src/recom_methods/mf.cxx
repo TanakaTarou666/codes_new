@@ -2,7 +2,7 @@
 
 MF::MF(int missing_pattern) : Recom(missing_pattern), user_factors_(), item_factors_(), prev_user_factors_(), prev_item_factors_() {
     method_name_ = "MFtest32";
-} //ファイル名
+}  // ファイル名
 
 void MF::set_parameters(double latent_dimension_percentage, double learning_rate, double reg_parameter) {
 #if defined ARTIFICIALITY
@@ -18,20 +18,20 @@ void MF::set_parameters(double latent_dimension_percentage, double learning_rate
         return 1;
     }
 #endif
-    parameters_ = {(double)latent_dimension_, reg_parameter, learning_rate};
-    dirs_ = mkdir_result({method_name_}, parameters_, num_missing_value_);
     reg_parameter_ = reg_parameter;
     learning_rate_ = learning_rate;
+    parameters_ = {(double)latent_dimension_, reg_parameter_, learning_rate_};
+    dirs_ = mkdir_result({method_name_}, parameters_, num_missing_value_);
     user_factors_ = Matrix(num_users, latent_dimension_);
     item_factors_ = Matrix(num_items, latent_dimension_);
     return;
 }
 
-void MF::train() { //mf_pred
+void MF::train() {  // mf_pred
     int error_count = 0;
     double best_objective_value = DBL_MAX;
     for (int initial_value_index = 0; initial_value_index < num_initial_values; initial_value_index++) {
-        std::cout << method_name_ <<": initial setting " << initial_value_index << std::endl;
+        std::cout << method_name_ << ": initial setting " << initial_value_index << std::endl;
         set_initial_values(initial_value_index);
         error_detected_ = false;
 #ifndef ARTIFICIALITY
@@ -145,7 +145,7 @@ double MF::calculate_objective_value() {
 bool MF::calculate_convergence_criterion() {
     bool result = false;
 #if defined ARTIFICIALITY
-    double diff = frobenius_norm(prev_user_factors_ - user_factors_) + frobenius_norm(prev_item_factors_ - item_factors_);
+    double diff = frobenius_norm((prev_user_factors_ - user_factors_)) + frobenius_norm(prev_item_factors_ - item_factors_);
 #elif
     objective_value = calculate_objective_value();
     double diff = (prev_objective_value_ - objective_value) / prev_objective_value_;
@@ -168,4 +168,3 @@ void MF::calculate_prediction() {
         prediction_[index] = user_factors_[missing_data_indices_[index][0]] * item_factors_[missing_data_indices_[index][1]];
     }
 }
-

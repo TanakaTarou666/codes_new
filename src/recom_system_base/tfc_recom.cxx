@@ -2,17 +2,20 @@
 
 TFCRecom::TFCRecom(int missing_pattern) : Recom(missing_pattern), membership_(), prev_membership_(), dissimilarities_() {}
 
-void TFCRecom::calculate_dissimilarities() { 
-    
-    /*
-    for(int i = 0; i < num_users; i++){
-    for(int i = 0; i < sprse_missing_data_(i,"row"); i++)
-         pow( y[i]-predict_y[i] , 2);
-    
-    Dissimilarities[c][i] =
+void TFCRecom::calculate_dissimilarities(Tensor predict_correct_data) {
+    for (int c = 0; c < cluster_size_; c++) {
+        for (int i = 0; i < sparse_missing_data_.rows(); i++) {
+            dissimilarities_(c, i) = 0.0;
+            for (int j = 0; j < sparse_missing_data_(i, "row"); j++) {
+                if (sparse_missing_data_(i, j) != 0) {
+                    double tmp = 0.0;
+                    tmp = (sparse_missing_data_(i, j) - predict_correct_data[c](i,sparse_missing_data_(i,j, "index")));
+                    dissimilarities_(c, i) += tmp * tmp;
+                }
+            }
+        }
     }
-    */
-    return; 
+    return;
 }
 
 void TFCRecom::calculate_membership() {

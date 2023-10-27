@@ -13,6 +13,9 @@ class SparseMatrix {
    public:
     SparseMatrix(int rows, int cols);
     SparseMatrix(int rows, int cols, int nnz);
+    SparseMatrix();
+    SparseMatrix(const SparseMatrix& arg);
+    SparseMatrix(int size, double* diagonalValues,const char* s); 
     ~SparseMatrix();
     double& operator()(int row, int index);              // 非constオブジェクト向け
     const double& operator()(int row, int index) const;  // constオブジェクト向け
@@ -27,7 +30,7 @@ class SparseMatrix {
     int nnz() const; //total要素数
     SparseMatrix& operator=(const SparseMatrix& arg);  // コピー代入演算子
     SparseMatrix& operator=(SparseMatrix&& arg);       // ムーブ代入演算子
-    Matrix operator*(const Matrix& arg);
+    Matrix operator*(Matrix& arg);
     void print_values();
     double* get_values();  // データへのポインタを取得するメソッド
     double* get_values() const;
@@ -39,5 +42,9 @@ class SparseMatrix {
     void set_col_indices(int* new_col_indices);
     void set_values(double* new_values);
     void set_nnz(int nnz);
+    SparseMatrix transpose() const;
 };
+
+//Matrix operator*(const SparseMatrix& lhs, const Matrix& rhs);
+
 #endif  // __SPARSE_MATRIX__

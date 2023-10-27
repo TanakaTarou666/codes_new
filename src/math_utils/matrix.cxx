@@ -116,9 +116,9 @@ Matrix& Matrix::operator=(Matrix&& arg) {
 }
 
 double* Matrix::get_values() { return values_; }
-double* Matrix::get_values() const { return values_; }
+const double* Matrix::get_values() const { return values_; }
 
-Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
+Matrix operator+(Matrix& lhs, Matrix& rhs) {
     int rows_ = lhs.rows();
     int cols_ = lhs.cols();
 
@@ -136,7 +136,7 @@ Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
 
     return result;
 }
-Matrix operator-(const Matrix& lhs, const Matrix& rhs) {
+Matrix operator-(Matrix& lhs, Matrix& rhs) {
     int rows_ = lhs.rows();
     int cols_ = lhs.cols();
 
@@ -154,7 +154,7 @@ Matrix operator-(const Matrix& lhs, const Matrix& rhs) {
 
     return result;
 }
-Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
+Matrix operator*(Matrix& lhs, Matrix& rhs) {
     int numrows_A = lhs.rows();
     int numcols_A = lhs.cols();
     int numrows_B = rhs.rows();
@@ -189,9 +189,11 @@ Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
     return result;
 }
 
+
+
 double frobenius_norm(const Matrix& arg) {
     double result = 0.0;
-    double* values_ = arg.get_values();
+    const double* values_ = arg.get_values();
     int numrows_ = arg.rows();
     int numcols_ = arg.cols();
     for (int i = 0; i < numrows_; i++) {

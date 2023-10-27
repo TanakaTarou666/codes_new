@@ -26,11 +26,12 @@ class Matrix {
     Matrix& operator=(Matrix&& arg);       // ムーブ代入演算子
 
     double* get_values();  // データへのポインタを取得するメソッド
-    double* get_values() const;
+    const double* get_values() const;
 };
-Matrix operator+(const Matrix& lhs, const Matrix& rhs);
-Matrix operator-(const Matrix& lhs, const Matrix& rhs);
-Matrix operator*(const Matrix& lhs, const Matrix& rhs);
+Matrix operator+(Matrix& lhs, Matrix& rhs);
+Matrix operator-(Matrix& lhs, Matrix& rhs);
+Matrix operator*(Matrix& lhs, Vector& rhs);
+Matrix operator*(Matrix& lhs, Matrix& rhs);
 // 各要素を2乗し足し合わせたものを平方根
 double frobenius_norm(const Matrix& arg);
 
