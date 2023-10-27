@@ -273,7 +273,7 @@ std::vector<std::string> mkdir_result(std::vector<std::string> dirs, std::vector
     } else {
         parameters[0] = std::round(num_users * parameters[0] / 100);
     }
-#elif
+#else
     if (num_users > num_items) {
         parameters[0] = std::round(num_items * parameters[0] / 100);
     } else {

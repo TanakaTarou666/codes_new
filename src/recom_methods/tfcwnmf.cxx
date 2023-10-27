@@ -16,7 +16,7 @@ TFCWNMF::TFCWNMF(int missing_count)
 void TFCWNMF::set_parameters(double latent_dimension_percentage, int cluster_size, double fuzzifier_em, double fuzzifier_Lambda) {
 #if defined ARTIFICIALITY
     latent_dimension_ = latent_dimension_percentage;
-#elif
+#else
     if (num_users > num_items) {
         latent_dimension_ = std::round(num_items * latent_dimension_percentage / 100);
     } else {
@@ -24,7 +24,7 @@ void TFCWNMF::set_parameters(double latent_dimension_percentage, int cluster_siz
     }
     if (steps < 50) {
         std::cerr << "MF: \"step\" should be 50 or more.";
-        return 1;
+        return;
     }
 #endif
     cluster_size_ = cluster_size;
@@ -196,10 +196,10 @@ bool TFCWNMF::calculate_convergence_criterion() {
 #if defined ARTIFICIALITY
     double diff = frobenius_norm(prev_user_factors_ - user_factors_) + frobenius_norm(prev_item_factors_ - item_factors_) +
                   frobenius_norm(prev_membership_ - membership_);
-#elif
-    objective_value = calculate_objective_value();
-    double diff = (prev_objective_value_ - objective_value) / prev_objective_value_;
-    prev_objective_value_ = objective_value;
+#else
+    objective_value_ = calculate_objective_value();
+    double diff = (prev_objective_value_ - objective_value_) / prev_objective_value_;
+    prev_objective_value_ = objective_value_;
 #endif
     if (std::isfinite(diff)) {
         if (diff < convergence_criteria) {

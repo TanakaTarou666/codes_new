@@ -36,13 +36,13 @@ class Recom {
     int *sparse_missing_data_row_pointers_,*sparse_missing_data_col_indices_;
     // エラーの検知
     bool error_detected_;
-    double prev_objective_value_;
     // 欠損させた箇所，類似度
     Matrix missing_data_indices_;
     // 欠損させた箇所のスパースデータの列番号
     Vector sparse_missing_data_cols_;
     // 予測評
     Vector prediction_;
+    double prev_objective_value_ ,objective_value_;
 
 
    public:

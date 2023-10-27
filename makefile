@@ -1,6 +1,6 @@
 CXX = g++
-#CXXFLAGS = -O3 -mtune=native -march=native -mfpmath=both
-CXXFLAGS =  -g -Wall -Wextra  #debug用
+CXXFLAGS = -O3 -mtune=native -march=native -mfpmath=both
+#CXXFLAGS =  -g -Wall -Wextra  #debug用
 
 math_utils = src/math_utils/vector.cxx \
             src/math_utils/matrix.cxx \

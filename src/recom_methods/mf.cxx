@@ -7,7 +7,7 @@ MF::MF(int missing_pattern) : Recom(missing_pattern), user_factors_(), item_fact
 void MF::set_parameters(double latent_dimension_percentage, double learning_rate, double reg_parameter) {
 #if defined ARTIFICIALITY
     latent_dimension_ = latent_dimension_percentage;
-#elif
+#else
     if (num_users > num_items) {
         latent_dimension_ = std::round(num_items * latent_dimension_percentage / 100);
     } else {
@@ -15,7 +15,7 @@ void MF::set_parameters(double latent_dimension_percentage, double learning_rate
     }
     if (steps < 50) {
         std::cerr << "MF: \"step\" should be 50 or more.";
-        return 1;
+        return;
     }
 #endif
     reg_parameter_ = reg_parameter;
@@ -146,10 +146,10 @@ bool MF::calculate_convergence_criterion() {
     bool result = false;
 #if defined ARTIFICIALITY
     double diff = frobenius_norm((prev_user_factors_ - user_factors_)) + frobenius_norm(prev_item_factors_ - item_factors_);
-#elif
-    objective_value = calculate_objective_value();
-    double diff = (prev_objective_value_ - objective_value) / prev_objective_value_;
-    prev_objective_value_ = objective_value;
+#else
+    objective_value_ = calculate_objective_value();
+    double diff = (prev_objective_value_ - objective_value_) / prev_objective_value_;
+    prev_objective_value_ = objective_value_;
 #endif
     if (std::isfinite(diff)) {
         if (diff < convergence_criteria) {

@@ -9,7 +9,7 @@ void TFCMF::set_parameters(double latent_dimension_percentage, int cluster_size,
                            double learning_rate) {
 #if defined ARTIFICIALITY
     latent_dimension_ = latent_dimension_percentage;
-#elif
+#else
     if (num_users > num_items) {
         latent_dimension_ = std::round(num_items * latent_dimension_percentage / 100);
     } else {
@@ -17,7 +17,7 @@ void TFCMF::set_parameters(double latent_dimension_percentage, int cluster_size,
     }
     if (steps < 50) {
         std::cerr << "MF: \"step\" should be 50 or more.";
-        return 1;
+        return;
     }
 #endif
     reg_parameter_ = reg_parameter;
@@ -25,7 +25,7 @@ void TFCMF::set_parameters(double latent_dimension_percentage, int cluster_size,
     cluster_size_ = cluster_size;
     fuzzifier_em_ = fuzzifier_em;
     fuzzifier_Lambda_ = fuzzifier_Lambda;
-    parameters_ = {(double)cluster_size_, fuzzifier_em_, fuzzifier_Lambda_, (double)latent_dimension_, reg_parameter_, learning_rate_};
+    parameters_ = {(double)latent_dimension_,(double)cluster_size_, fuzzifier_em_, fuzzifier_Lambda_, reg_parameter_, learning_rate_};
     dirs_ = mkdir_result({method_name_}, parameters_, num_missing_value_);
     user_factors_ = Tensor(cluster_size_, num_users, latent_dimension_);
     item_factors_ = Tensor(cluster_size_, num_items, latent_dimension_);
@@ -155,10 +155,10 @@ bool TFCMF::calculate_convergence_criterion() {
     bool result = false;
 #if defined ARTIFICIALITY
     double diff = frobenius_norm(prev_user_factors_ - user_factors_) + frobenius_norm(prev_item_factors_ - item_factors_) + frobenius_norm(prev_membership_ - membership_);
-#elif
-    objective_value = calculate_objective_value();
-    double diff = (prev_objective_value_ - objective_value) / prev_objective_value_;
-    prev_objective_value_ = objective_value;
+#else
+    objective_value_ = calculate_objective_value();
+    double diff = (prev_objective_value_ - objective_value_) / prev_objective_value_;
+    prev_objective_value_ = objective_value_;
 #endif
     if (std::isfinite(diff)) {
         if (diff < convergence_criteria) {
@@ -176,7 +176,7 @@ void TFCMF::calculate_prediction() {
             for (int c = 0; c < cluster_size_; c++) {
                 prediction_[index] += membership_[c][missing_data_indices_[index][0]] * (user_factors_[c][missing_data_indices_[index][0]] * item_factors_[c][missing_data_indices_[index][1]]);
             }
-         std::cout << "Prediction:" << prediction_[index]
-                  << " SparseCorrectData:" << sparse_correct_data_(missing_data_indices_[index][0],missing_data_indices_[index][1]) << std::endl;
+        //  std::cout << "Prediction:" << prediction_[index]
+        //           << " SparseCorrectData:" << sparse_correct_data_(missing_data_indices_[index][0],missing_data_indices_[index][1]) << std::endl;
     }
 }
